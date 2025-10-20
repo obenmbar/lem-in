@@ -13,7 +13,7 @@ func main() {
 		return
 	}
 	file := os.Args[1]
-
+         
 	Data, err := os.ReadFile(file)
 	if err != nil {
 		log.Fatal("error en readfile", err)
