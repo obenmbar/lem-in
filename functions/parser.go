@@ -9,7 +9,7 @@ import (
 func Parser(Data string) {
 	var (
 		R     Room
-		Stend StartEnd = StartEnd{Start: &R, End: &R}
+		Stend StartEnd 
 		Gra   Graph    = Graph{make(map[string]*Room)}
 
 		NumberAnts          int
@@ -17,62 +17,69 @@ func Parser(Data string) {
 		IsEnd               bool
 		IsNumberAnts        bool
 		checkStartEndNumber int
+		Index_start         int
 	)
 
 	SliceData := strings.Split(Data, "\n")
 	for i, value := range SliceData {
-		if strings.TrimSpace(value) == "" {
-			continue
-		} else if !IsStart && !IsNumberAnts {
-			NumberAnts, err = strconv.Atoi(value)
-			if err != nil || NumberAnts <= 0 {
-				fmt.Println(" le nombre de fourmis n'est pas valid")
-				return
-			}
-			IsNumberAnts = true
-			continue
-		}
-
-		if strings.HasPrefix(value, "#") {
-			if value == "##start" {
+		if strings.HasPrefix(strings.TrimSpace(value), "#") {
+			if strings.TrimSpace(value) == "##start" {
 				if !IsStart {
-					var Index_start int
-					if strings.TrimSpace(SliceData[i+1]) == "" {
-						Index_start += 1
-						continue
-					} else {
-						err = R.AddRoom(SliceData[i+Index_start+1])
-						if err != nil {
-							fmt.Println("55")
-							fmt.Println(err)
-							return
+					for v := i + 1; v < len(SliceData); v++ {
+						if strings.TrimSpace(SliceData[v]) == ""  || strings.HasPrefix(strings.TrimSpace(SliceData[v]),"#"){
+							if strings.TrimSpace(SliceData[v]) != "##end" {
+								Index_start += 1
+								
+							     continue
+							}else {
+								fmt.Println("il ya end dessous de start alors les cordonne pas exist")
+								return
+							}
+							
+						} else {
+							break
 						}
-						Stend.Start.Name = R.Name
-						Stend.Start.X = R.X
-						Stend.Start.Y = R.Y
-						Gra.Addmap(&R)
-						IsStart = true
-						checkStartEndNumber++
-						continue
 					}
+
+					err = R.AddRoom(SliceData[i+Index_start+1])
+					Index_start = 0
+					if err != nil {
+						fmt.Println(err)
+						return
+					}
+					Stend.Start = R
+					IsStart = true
+					checkStartEndNumber++
+					continue
 
 				} else {
 					checkStartEndNumber++
 					continue
 				}
-			} else if value == "##end" {
+			} else if strings.TrimSpace(value) == "##end" {
 				if !IsEnd {
+					for v := i + 1; v < len(SliceData); v++ {
+						if strings.TrimSpace(SliceData[v]) == "" || strings.HasPrefix(SliceData[v], "#")  {
+							if  strings.TrimSpace(SliceData[v]) != "##start" {
+								Index_start += 1
+							     continue
+							} else {
+								fmt.Println("error il ya la valeur ##start directement desous de la valeur ##end")
+								return
+							}
+						} else {
+							break
+						}
+					}
 					IsEnd = true
 					checkStartEndNumber++
-					err = R.AddRoom(SliceData[i+1])
+					err = R.AddRoom(SliceData[i+Index_start+1])
+					Index_start = 0
 					if err != nil {
 						fmt.Println(err)
 						return
 					}
-					Stend.End.Name = R.Name
-					Stend.End.X = R.X
-					Stend.End.Y = R.Y
-					Gra.Addmap(&R)
+					Stend.End = R
 					continue
 				} else {
 					checkStartEndNumber++
@@ -81,25 +88,45 @@ func Parser(Data string) {
 			} else {
 				continue
 			}
-		} else if len(value) >= 5 && strings.Count(value, " ") > 0 {
+		} else if strings.TrimSpace(value) == "" {
+			continue
+		} else if !IsStart && !IsNumberAnts {
+			NumberAnts, err = strconv.Atoi(strings.TrimSpace(value))
+			if err != nil || NumberAnts <= 0 {
+				fmt.Println(" le nombre de fourmis n'est pas valid")
+				return
+			}
+			IsNumberAnts = true
+			continue
+		} else if len(strings.TrimSpace(value)) >= 5 && strings.Count(value, " ") > 0 && strings.Count(value,"-")==0 {
 
 			err = R.AddRoom(value)
 			if err != nil {
+		
 				fmt.Println(err)
 				return
 			}
-
-			Gra.Addmap(&R)
+			err = Gra.Addmap(R)
+			if err != nil {
+				fmt.Println(R)
+				
+				fmt.Println(err)
+				return
+			}
 			continue
 		} else if strings.Count(value, "-") == 1 {
-			if strings.Count(value, " ") != 0 {
-				link := strings.Split(value, "-")
+			if strings.Count(strings.TrimSpace(value), " ") == 0 && len(value) >= 3 {
+				link := strings.Split(strings.TrimSpace(value), "-")
+                 
 				err = Gra.AddLinks(link)
 				if err != nil {
+				
 					fmt.Println(err)
 					return
 				}
-
+			} else {
+				fmt.Println("error en format de tunele exemple *4-3*")
+				return
 			}
 		} else {
 			fmt.Println("error en FORMAT  des donnees de text.txt il y'a un sembole n'exist pas com un seulement chaine des caracter simple ")
@@ -122,5 +149,5 @@ func Parser(Data string) {
 		fmt.Println("error , il n ya pas un valeur senifie le nombre des fourmis ")
 		return
 	}
-	fmt.Println("ok")
+	Gra.BFS()
 }
