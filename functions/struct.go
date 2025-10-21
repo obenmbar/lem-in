@@ -16,8 +16,8 @@ type StartEnd struct {
 type Bfs struct {
 	Visted map[*Room]bool
 	Chemin map[int][]*Room
-	i int
-	path [][]*Room
+	visitchemin map[*Room]bool
+    IndexChemin int
 }
 var (
 	err error
