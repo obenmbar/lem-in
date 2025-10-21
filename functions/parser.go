@@ -8,10 +8,9 @@ import (
 
 func Parser(Data string) {
 	var (
-		R     Room
-		Stend StartEnd 
-		Gra   Graph    = Graph{make(map[string]*Room)}
-
+		R                   Room
+		Gra                 Graph = Graph{make(map[string]*Room)}
+		Stend StartEnd
 		NumberAnts          int
 		IsStart             bool
 		IsEnd               bool
@@ -21,21 +20,21 @@ func Parser(Data string) {
 	)
 
 	SliceData := strings.Split(Data, "\n")
-	for i, value := range SliceData {
-		if strings.HasPrefix(strings.TrimSpace(value), "#") {
-			if strings.TrimSpace(value) == "##start" {
+	for i, valu := range SliceData {
+		value := strings.TrimSpace(valu)
+		if strings.HasPrefix(value, "#") {
+			if value == "##start" {
 				if !IsStart {
 					for v := i + 1; v < len(SliceData); v++ {
-						if strings.TrimSpace(SliceData[v]) == ""  || strings.HasPrefix(strings.TrimSpace(SliceData[v]),"#"){
+						if strings.TrimSpace(SliceData[v]) == "" || strings.HasPrefix(strings.TrimSpace(SliceData[v]), "#") {
 							if strings.TrimSpace(SliceData[v]) != "##end" {
-								Index_start += 1
-								
-							     continue
-							}else {
+								Index_start++
+
+								continue
+							} else {
 								fmt.Println("il ya end dessous de start alors les cordonne pas exist")
 								return
 							}
-							
 						} else {
 							break
 						}
@@ -56,13 +55,13 @@ func Parser(Data string) {
 					checkStartEndNumber++
 					continue
 				}
-			} else if strings.TrimSpace(value) == "##end" {
+			} else if value == "##end" {
 				if !IsEnd {
 					for v := i + 1; v < len(SliceData); v++ {
-						if strings.TrimSpace(SliceData[v]) == "" || strings.HasPrefix(SliceData[v], "#")  {
-							if  strings.TrimSpace(SliceData[v]) != "##start" {
+						if strings.TrimSpace(SliceData[v]) == "" || strings.HasPrefix(SliceData[v], "#") {
+							if strings.TrimSpace(SliceData[v]) != "##start" {
 								Index_start += 1
-							     continue
+								continue
 							} else {
 								fmt.Println("error il ya la valeur ##start directement desous de la valeur ##end")
 								return
@@ -88,39 +87,39 @@ func Parser(Data string) {
 			} else {
 				continue
 			}
-		} else if strings.TrimSpace(value) == "" {
+		} else if value == "" {
 			continue
 		} else if !IsStart && !IsNumberAnts {
-			NumberAnts, err = strconv.Atoi(strings.TrimSpace(value))
+			NumberAnts, err = strconv.Atoi(value)
 			if err != nil || NumberAnts <= 0 {
 				fmt.Println(" le nombre de fourmis n'est pas valid")
 				return
 			}
 			IsNumberAnts = true
 			continue
-		} else if len(strings.TrimSpace(value)) >= 5 && strings.Count(value, " ") > 0 && strings.Count(value,"-")==0 {
+		} else if len(value) >= 5 && strings.Count(value, " ") > 0 && strings.Count(value, "-") == 0 {
 
 			err = R.AddRoom(value)
 			if err != nil {
-		
+
 				fmt.Println(err)
 				return
 			}
 			err = Gra.Addmap(R)
 			if err != nil {
 				fmt.Println(R)
-				
+
 				fmt.Println(err)
 				return
 			}
 			continue
 		} else if strings.Count(value, "-") == 1 {
-			if strings.Count(strings.TrimSpace(value), " ") == 0 && len(value) >= 3 {
-				link := strings.Split(strings.TrimSpace(value), "-")
-                 
+			if strings.Count(value, " ") == 0 && len(value) >= 3 {
+				link := strings.Split(value, "-")
+
 				err = Gra.AddLinks(link)
 				if err != nil {
-				
+
 					fmt.Println(err)
 					return
 				}
@@ -149,5 +148,8 @@ func Parser(Data string) {
 		fmt.Println("error , il n ya pas un valeur senifie le nombre des fourmis ")
 		return
 	}
-	Gra.BFS()
+	fmt.Println("ok")
+
+	Gra.BFS(Stend)
+
 }
