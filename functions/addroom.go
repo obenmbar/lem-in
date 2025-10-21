@@ -7,6 +7,8 @@ import (
 )
 
 func (R *Room) AddRoom(Dataroom string) error {
+
+	
 	name := strings.Fields(Dataroom)
 	if len(name) != 3 {
 		return fmt.Errorf("error en Add room ,les cordonner de room pas exist")
