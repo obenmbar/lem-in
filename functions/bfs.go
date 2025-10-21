@@ -1,43 +1,44 @@
 package lemino
 
-import "fmt"
+import (
+	"fmt"
+	
+)
 
-func (G *Graph) BFS() {
-	var (
-		bfs   Bfs = Bfs{Visted: make(map[*Room]bool), Chemin: make(map[int][]*Room)}
-		stend StartEnd
-	)
+func (G *Graph) BFS(Stend StartEnd) {
+	var bfs Bfs = Bfs{Visted: make(map[*Room]bool), Chemin: make(map[int][]*Room), visitchemin: make(map[*Room]bool)}
+
 	queue := make([]*Room, 0, len(G.Graphs))
-	queue = append(queue, &stend.Start)
+	queue = append(queue, G.Graphs[Stend.Start.Name])
 
 	for len(queue) > 0 {
 		rom := queue[0]
+
 		queue = queue[1:]
+
 		bfs.Visted[rom] = true
-		if rom.Name == stend.End.Name && rom.X == stend.End.X && rom.Y == stend.Start.Y {
-			for key, _ := range bfs.Visted {
-				bfs.Chemin[bfs.i]= 	append(bfs.Chemin[bfs.i], key)
-			}
-              bfs.i++
-			fmt.Println("ofight")
-			break
+		if rom == G.Graphs[Stend.End.Name] {
+			bfs.CHemin(rom, Stend, G)
+			fmt.Println("OFIGHT")
+			continue
+
 		}
+
 		for _, val := range rom.link {
 			if !bfs.Visted[val] {
 				queue = append(queue, val)
 			}
 		}
 	}
-	bfs.path = make([][]*Room,0) 
-     for _, val := range stend.End.link {
-		for key, value := range bfs.Chemin{
-			for _, romm := range value{
-               if romm == val {
-               bfs.path[key] = append(bfs.path[key], romm)
-			   }
-			}
+	delete(bfs.Chemin,bfs.IndexChemin)
+     bfs.Reverse()
+	for l, val := range bfs.Chemin {
+		fmt.Println(l)
+		for _ , i := range val {
+			fmt.Println(i)
 		}
-	 }
-	 fmt.Println(bfs.path)
+	}
+	
+	fmt.Println(bfs.Chemin)
 	fmt.Println("ok")
 }
