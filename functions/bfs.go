@@ -7,7 +7,7 @@ import (
 
 func (G *Graph) BFS(Stend StartEnd) {
 	var bfs Bfs = Bfs{Visted: make(map[*Room]bool), Chemin: make(map[int][]*Room), visitchemin: make(map[*Room]bool)}
-
+// var max_chemin int 
 	queue := make([]*Room, 0, len(G.Graphs))
 	queue = append(queue, G.Graphs[Stend.Start.Name])
 
@@ -17,11 +17,13 @@ func (G *Graph) BFS(Stend StartEnd) {
 		queue = queue[1:]
 
 		bfs.Visted[rom] = true
+		
 		if rom == G.Graphs[Stend.End.Name] {
-			bfs.CHemin(rom, Stend, G)
+			
+		   bfs.CHemin(G.Graphs[Stend.End.Name], Stend, G)
+			
 			fmt.Println("OFIGHT")
-			continue
-
+             continue
 		}
 
 		for _, val := range rom.link {
@@ -30,6 +32,7 @@ func (G *Graph) BFS(Stend StartEnd) {
 			}
 		}
 	}
+	
 	delete(bfs.Chemin,bfs.IndexChemin)
      bfs.Reverse()
 	for l, val := range bfs.Chemin {
@@ -39,6 +42,7 @@ func (G *Graph) BFS(Stend StartEnd) {
 		}
 	}
 	
-	fmt.Println(bfs.Chemin)
-	fmt.Println("ok")
+  bfs.Destribuer()
+
+ 
 }
