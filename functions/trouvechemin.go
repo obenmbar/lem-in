@@ -1,31 +1,44 @@
 package lemino
 
-import (
-	"fmt"
-)
+import "fmt"
 
-func (bfs *Bfs) CHemin(rom *Room, Stend StartEnd, G *Graph) {
+func (bfs *Bfs) CHemin(rom *Room, Stend StartEnd, G *Graph) bool {
+
 	if rom == G.Graphs[Stend.Start.Name] {
+		bfs.Visted[G.Graphs[Stend.Start.Name]] = false
+		bfs.Visted[G.Graphs[Stend.End.Name]] = false
 		bfs.Clearmap(G, Stend)
 		bfs.IndexChemin++
-		return
-	}
+		
+		fmt.Println("trouve start apres return d'abord")
+		return true
+	 }
+	 
+   bfs.visitchemin[rom] = true
+ 
 
-	if rom != G.Graphs[Stend.End.Name] || rom != G.Graphs[Stend.Start.Name] {
-		bfs.visitchemin[rom] = true
-	}
-
-	for _, va := range rom.link {
+for _, va := range rom.link {
 		if len(bfs.Chemin[bfs.IndexChemin]) == 0 {
 			bfs.Chemin[bfs.IndexChemin] = append(bfs.Chemin[bfs.IndexChemin], G.Graphs[Stend.End.Name])
 		}
+		// fmt.Println("==>", rom.Name, "links to:")
+		// for _, v := range rom.link {
+		// 	fmt.Println("   -", v.Name)
+		// }
+
 		if _, ok := bfs.Visted[va]; ok {
 			if !bfs.visitchemin[va] {
-
 				bfs.Chemin[bfs.IndexChemin] = append(bfs.Chemin[bfs.IndexChemin], va)
-				fmt.Println(va)
-				bfs.CHemin(va, Stend, G)
+				  bfs.visitchemin[rom] = true
+ 
+				if bfs.CHemin(va, Stend, G){
+                         return true
+				}
+			
 			}
 		}
 	}
+	
+	return false
+	
 }
