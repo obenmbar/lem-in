@@ -11,15 +11,23 @@ type Graph struct {
 }
 type StartEnd struct {
 	Start Room
-	End  Room
+	End   Room
 }
 type Bfs struct {
-	Visted map[*Room]bool
-	Chemin map[int][]*Room
+	Visted      map[*Room]bool
+	Chemin      map[int][]*Room
 	visitchemin map[*Room]bool
-    IndexChemin int
+	IndexChemin int
 }
-var (
-	err error
-)
 
+var (
+	NumberAnts int
+	err        error
+)
+ type Ant struct {
+	Id int 
+	Path []*Room
+	Isfiniched bool
+	 Step int
+	
+ }
