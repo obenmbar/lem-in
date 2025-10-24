@@ -160,6 +160,7 @@ func Parser(Data string) {
 // 	var m runtime.MemStats
 // 	runtime.ReadMemStats(&m)
 // 	fmt.Println("Alloc = ", m.Alloc/1024, "K/
+ 
  	Gra.BFS(Stend)
 
  }
