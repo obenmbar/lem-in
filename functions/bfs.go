@@ -1,13 +1,17 @@
 package lemino
 
-import (
-	"fmt"
-	
-)
+import "fmt"
 
 func (G *Graph) BFS(Stend StartEnd) {
 	var bfs Bfs = Bfs{Visted: make(map[*Room]bool), Chemin: make(map[int][]*Room), visitchemin: make(map[*Room]bool)}
-// var max_chemin int 
+	if len(G.Graphs)>1000{
+		G.Dfs(G.Graphs[Stend.Start.Name],Stend,&bfs)
+		delete(bfs.Chemin, bfs.IndexChemin)
+	    bfs.Reverse()
+		bfs.Destribuer()
+		return
+	}
+	
 	queue := make([]*Room, 0, len(G.Graphs))
 	queue = append(queue, G.Graphs[Stend.Start.Name])
 
@@ -17,13 +21,11 @@ func (G *Graph) BFS(Stend StartEnd) {
 		queue = queue[1:]
 
 		bfs.Visted[rom] = true
-		
+
 		if rom == G.Graphs[Stend.End.Name] {
-			
-		   bfs.CHemin(G.Graphs[Stend.End.Name], Stend, G)
-			
+			bfs.CHemin(G.Graphs[Stend.End.Name], Stend, G)
 			fmt.Println("OFIGHT")
-             continue
+			continue
 		}
 
 		for _, val := range rom.link {
@@ -32,17 +34,15 @@ func (G *Graph) BFS(Stend StartEnd) {
 			}
 		}
 	}
-	
-	delete(bfs.Chemin,bfs.IndexChemin)
-     bfs.Reverse()
+
+	delete(bfs.Chemin, bfs.IndexChemin)
+	bfs.Reverse()
 	for l, val := range bfs.Chemin {
 		fmt.Println(l)
-		for _ , i := range val {
+		for _, i := range val {
 			fmt.Println(i)
 		}
 	}
-	
-  bfs.Destribuer()
-
  
+	bfs.Destribuer()
 }
