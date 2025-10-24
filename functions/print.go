@@ -3,64 +3,71 @@ package lemino
 import "fmt"
 
 func (bfs *Bfs) Affichage(ants_chemin []int) {
-	var SliceAnt []*Ant
-	antId := 1
 
-	// --- إنشاء النمل حسب عددهم والمسارات ---
-	for index, count := range ants_chemin {
-		for i := 0; i < count; i++ {
-			SliceAnt = append(SliceAnt, &Ant{
-				Id:   antId,
-				Path: bfs.Chemin[index],
-				Step: -1, // -1 يعني باقي ما بداش
-			})
-			antId++
+	var SliceAnt []*Ant
+	var i int = 1
+	for i <= NumberAnts {
+
+		for index := 0; index < len(ants_chemin); index++ {
+			if ants_chemin[index] > 0 {
+				i = i + index
+				SliceAnt = append(SliceAnt, &Ant{
+					Id:   i,
+					Path: bfs.Chemin[index],
+					Step: 0,
+				})
+			
+				ants_chemin[index]--
+			}
 		}
+		i++
 	}
 
 	totalAnts := len(SliceAnt)
 	finished := 0
-	time := 0 // عدد الجولات
-
-	// --- المحاكاة ---
 	for finished < totalAnts {
 		line := ""
 
+		room_ocupe := make(map[string]bool)
 		for i := 0; i < len(SliceAnt); i++ {
-			ant := SliceAnt[i]
 
-			// النمل يدخل تدريجياً: كل جولة، نملة جديدة تبدأ طريقها
-			if ant.Step == -1 {
-				if i <= time { // واحد جديد يدخل كل جولة
-					ant.Step = 0
-				} else {
-					continue
-				}
+			formi := SliceAnt[i]
+
+			if formi.Step == 0 {
+				formi.Step++
 			}
 
-			// إذا سالات الطريق، ما ندير والو
-			if ant.Isfiniched {
+		
+			
+			if room_ocupe[formi.Path[formi.Step].Name] {
+		
 				continue
 			}
 
-			// الخطوة القادمة
-			ant.Step++
-			if ant.Step < len(ant.Path) {
-				line += fmt.Sprintf("L%d-%s ", ant.Id, ant.Path[ant.Step].Name)
+
+			if formi.Isfiniched {
+				continue
 			}
 
-			// تحقق واش وصل للنهاية
-			if ant.Step == len(ant.Path)-1 {
-				ant.Isfiniched = true
+			if formi.Step < len(formi.Path) {
+				if formi.Step != len(formi.Path)-1 {
+					room_ocupe[formi.Path[formi.Step].Name] = true
+				}
+
+				line += fmt.Sprintf("L%d-%s ", formi.Id, formi.Path[formi.Step].Name)
+
+			}
+
+			if formi.Step == len(formi.Path)-1 {
 				finished++
+				formi.Isfiniched = true
+				continue
 			}
+			formi.Step++
 		}
-
-		// طبع الخط إذا كاين تحرك
 		if line != "" {
 			fmt.Println(line)
 		}
 
-		time++ // الجولة القادمة
 	}
 }
