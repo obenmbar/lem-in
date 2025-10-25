@@ -1,14 +1,11 @@
 package lemino
-
+// Clearmap removes the current invalid or blocked path from the BFS results
+// and reindexes the remaining valid paths to keep the path order consistent.
 func (bfs *Bfs) Clearmap(G *Graph, S StartEnd) {
-	// fmt.Println("kkkkkkkkkkk")
-	// fmt.Println(len(bfs.Chemin[bfs.IndexChemin]))
-	// if len(bfs.Chemin[bfs.IndexChemin]) < 2 {
-	// 	delete(bfs.Chemin, bfs.IndexChemin)
-	// }
-	for _, i := range bfs.Chemin[bfs.IndexChemin][0].link {
+
+	for _, chombre := range G.Graphs[bfs.Chemin[bfs.IndexChemin][0]].link {
 		if len(bfs.Chemin[bfs.IndexChemin]) > 1 {
-			if i == bfs.Chemin[bfs.IndexChemin][1] {
+			if chombre == bfs.Chemin[bfs.IndexChemin][1] {
 				return
 			}
 		}
@@ -20,6 +17,7 @@ func (bfs *Bfs) Clearmap(G *Graph, S StartEnd) {
 		if key != index {
 			bfs.Chemin[index] = value
 			delete(bfs.Chemin, key)
+		
 			index++
 			continue
 		}
