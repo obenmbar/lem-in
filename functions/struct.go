@@ -4,29 +4,31 @@ type Room struct {
 	Name string
 	X    int
 	Y    int
-	link []*Room
+	link []string
 }
 type Graph struct {
 	Graphs map[string]*Room
 }
 type StartEnd struct {
-	Start Room
-	End   Room
+	Start string
+	End   string
 }
 type Bfs struct {
-	Visted      map[*Room]bool
-	Chemin      map[int][]*Room
-	visitchemin map[*Room]bool
+	Visted      map[string]bool
+	Chemin      map[int][]string
+	visitchemin map[string]bool
+	
 	IndexChemin int
 }
 
 var (
 	NumberAnts int
 	err        error
+
 )
  type Ant struct {
 	Id int 
-	Path []*Room
+	Path []string
 	Isfiniched bool
 	 Step int
 	
