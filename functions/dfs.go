@@ -3,12 +3,15 @@ package lemino
 // recursively exploring all possible paths until the end room is found.
 func (G *Graph) Dfs(rom string, Stend StartEnd, BFS *Bfs) {
 	if rom == Stend.End {
-		BFS.CHemin(rom, Stend, G)
+		// BFS.CHemin(rom, Stend, G)
+		BFS.Allchemin(Stend)
+	 BFS.IndexChemin++
 		return
 	}
 	BFS.Visted[rom] = true
 	for _, room := range G.Graphs[rom].link {
 		if !BFS.Visted[room] {
+		 BFS.Parent[room]=rom
 			G.Dfs(room, Stend, BFS)
 		}
 	}

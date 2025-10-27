@@ -176,5 +176,6 @@ func Parser(Data string) {
 	}
 
 	// Launch BFS algorithm to find paths
-	Gra.BFS(Stend)
+	Gra.EdmondKarp(Stend)
+	
 }

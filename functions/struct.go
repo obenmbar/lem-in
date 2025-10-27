@@ -17,7 +17,7 @@ type Bfs struct {
 	Visted      map[string]bool
 	Chemin      map[int][]string
 	visitchemin map[string]bool
-	
+	Parent map[string]string
 	IndexChemin int
 }
 
