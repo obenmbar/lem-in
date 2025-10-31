@@ -8,6 +8,8 @@ type Room struct {
 }
 type Graph struct {
 	Graphs map[string]*Room
+	Capacitie map[string]map[string]int
+	
 }
 type StartEnd struct {
 	Start string
@@ -31,5 +33,11 @@ var (
 	Path []string
 	Isfiniched bool
 	 Step int
-	
+ }
+ 
+ type Edge struct {
+	From string
+	To string
+	Capacity int 
+	Reverse *Edge
  }

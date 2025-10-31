@@ -1,6 +1,7 @@
 package lemino
 
 import "fmt"
+
 // AddLinks adds a bidirectional link between two rooms in the graph.
 // It performs several validations to ensure that both rooms exist, are distinct,
 // and are not already linked together before creating the connection.
@@ -24,13 +25,23 @@ func (G *Graph) AddLinks(link []string, stend StartEnd) error {
 	if len(G.Graphs[link[0]].link) > 0 {
 		for _, val := range G.Graphs[link[0]].link {
 			if key := val; key == link[1] {
-				return fmt.Errorf("Error en add link , les deux room deja liee avec eux")
+				return fmt.Errorf("Error en add link, les deux room deja liee avec eux")
 			}
 		}
 	}
 
 	G.Graphs[link[0]].link = append(G.Graphs[link[0]].link, link[1])
 	G.Graphs[link[1]].link = append(G.Graphs[link[1]].link, link[0])
+
+	if G.Capacitie[link[0]] == nil {
+		G.Capacitie[link[0]] = make(map[string]int)
+	}
+	if G.Capacitie[link[1]] == nil {
+		G.Capacitie[link[1]] = make(map[string]int)
+	}
+
+	G.Capacitie[link[0]][link[1]] = 1
+	G.Capacitie[link[1]][link[0]] = 0
 
 	return nil
 }

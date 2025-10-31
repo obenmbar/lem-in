@@ -3,7 +3,7 @@ package lemino
 import "fmt"
 
 // Affichage simulates the movement of all ants through the found paths.
-// It prints each step of the simulation showing which ant moves to which room.
+// It prints each step  of the simulation showing which ant moves to which room.
 func (bfs *Bfs) Affichage(ants_chemin []int) {
 
 	var SliceAnt []*Ant

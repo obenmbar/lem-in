@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 )
-// AddRoom parses a room definition string and initializes a Room struct.
+// AddRoom parses a room  definition string and initializes a Room struct.
 // It validates the room name and coordinates format before assigning the values.
 func (R *Room) AddRoom(Dataroom string) error {
 

@@ -12,7 +12,7 @@ import (
 func Parser(Data string) {
 	var (
 		R     Room
-		Gra   Graph = Graph{make(map[string]*Room)}
+		Gra   Graph = Graph{make(map[string]*Room),make(map[string]map[string]int)}
 		Stend StartEnd
 
 		IsStart             bool
@@ -50,7 +50,7 @@ func Parser(Data string) {
 					}
 
 					err = R.AddRoom(SliceData[i+Index_start+1])
-					Index_start = 0
+					 Index_start = 0
 					if err != nil {
 						fmt.Println(err)
 						return
@@ -176,6 +176,7 @@ func Parser(Data string) {
 	}
 
 	// Launch BFS algorithm to find paths
-	Gra.EdmondKarp(Stend)
+
+	Gra.BFS(Stend)
 	
 }

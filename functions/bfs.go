@@ -2,74 +2,49 @@ package lemino
 
 import "fmt"
 
+// BFS performs a Breadth-First Search on the graph to find all possible paths
+// between the start and end nodes defined in the Stend structure.
+func (G *Graph) BFS(Stend StartEnd) {
+	var bfs Bfs = Bfs{Visted: make(map[string]bool), Chemin: make(map[int][]string), visitchemin: make(map[string]bool)}
 
-func (G *Graph) EdmondKarp(Stend StartEnd) {
-	var allPaths [][]string
-    var bfs *Bfs
-
-	for {
-	
-		bfs = &Bfs{
-			Visted: make(map[string]bool),
-			Chemin: make(map[int][]string),
-			Parent: make(map[string]string),
-		}
-
-		 G.BFSOnce(Stend, bfs)
-		if bfs.Chemin[bfs.IndexChemin] == nil {
-			break // ما بقاوش طرق
-		}
-		fmt.Println("a",bfs.Chemin)
-		
-	
-		G.removeEdges(bfs.Chemin[bfs.IndexChemin]) // نحيد الروابط ديال الطريق باش نلقاو طريق جديد
+	// If the graph is too large, use DFS instead to avoid memory overload.
+	if len(G.Graphs) > 1000 {
+		G.Dfs(G.Graphs[Stend.Start].Name, Stend, &bfs)
+		delete(bfs.Chemin, bfs.IndexChemin)
+		bfs.Reverse()
+		bfs.Destribuer()
+		return
 	}
 
-	fmt.Println("جميع الطرق الممكنة:", allPaths)
-	fmt.Println(len(allPaths))
-	fmt.Println(len(bfs.Chemin))
-	fmt.Println("hhh",bfs.IndexChemin)
-}
-
-func (G *Graph) removeEdges(path []string) {
-	for i := 0; i < len(path)-1; i++ {
-		a, b := path[i], path[i+1]
-		G.removeLink(a, b)
-	}
-}
-
-// دالة مساعدة صغيرة
-func (G *Graph) removeLink(a, b string) {
-	links := G.Graphs[a].link
-	newLinks := []string{}
-	for _, v := range links {
-		if v != b {
-			newLinks = append(newLinks, v)
-		}
-	}
-	G.Graphs[a].link = newLinks
-}
-
-func (G *Graph) BFSOnce(Stend StartEnd, bfs *Bfs)  {
-	queue := []string{Stend.Start}
+	queue := make([]string, 0, len(G.Graphs))
+	queue = append(queue, G.Graphs[Stend.Start].Name)
 
 	for len(queue) > 0 {
 		rom := queue[0]
 		queue = queue[1:]
+		bfs.Visted[rom] = true
 
-		if rom == Stend.End {
-			bfs.Allchemin(Stend)
-			bfs.IndexChemin++
-			
+		if rom == G.Graphs[Stend.End].Name {
+			bfs.CHemin(G.Graphs[Stend.End].Name, Stend, G)
+			continue
 		}
 
 		for _, val := range G.Graphs[rom].link {
 			if !bfs.Visted[val] {
-				bfs.Visted[val] = true
-				bfs.Parent[val] = rom
 				queue = append(queue, val)
 			}
 		}
 	}
-	
+
+	delete(bfs.Chemin, bfs.IndexChemin)
+	bfs.Reverse()
+
+	for l, val := range bfs.Chemin {
+		fmt.Println(l)
+		for _, i := range val {
+			fmt.Println(i)
+		}
+	}
+
+	bfs.Destribuer()
 }

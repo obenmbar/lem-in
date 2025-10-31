@@ -3,8 +3,7 @@ package lemino
 // recursively exploring all possible paths until the end room is found.
 func (G *Graph) Dfs(rom string, Stend StartEnd, BFS *Bfs) {
 	if rom == Stend.End {
-		// BFS.CHemin(rom, Stend, G)
-		BFS.Allchemin(Stend)
+		 BFS.CHemin(rom, Stend, G)
 	 BFS.IndexChemin++
 		return
 	}

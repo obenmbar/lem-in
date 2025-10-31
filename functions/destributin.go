@@ -1,6 +1,6 @@
 package lemino
 // Destribuer distributes the total number of ants across all available paths
-// based on their lengths to ensure a balanced and efficient movement.
+// based on their lengths to  ensure a balanced and efficient movement.
 func (bfs *Bfs) Destribuer() {
 	ants_chemin := make([]int, len(bfs.Chemin))
 	TotaleAnts := NumberAnts

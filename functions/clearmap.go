@@ -1,5 +1,5 @@
 package lemino
-// Clearmap removes the current invalid or blocked path from the BFS results
+// Clearmap removes the current  invalid or blocked path from the BFS results
 // and reindexes the remaining valid paths to keep the path order consistent.
 func (bfs *Bfs) Clearmap(G *Graph, S StartEnd) {
 
